@@ -10,22 +10,10 @@ class GithubStatusPlugin implements Plugin<Project> {
     void apply(Project project) {
         verifyRequiredPlugins project
 
-        project.extensions.create("githubstatus", GithubStatusExtension)
-        // TODO known limitation if there is no Flavours the plugin will not apply to default src/main
-        project.afterEvaluate {
-            project.android.productFlavors.all { flavour ->
-                if (flavour.hasProperty("enableGithubStatus") && !flavour.ext.enableGithubStatus) return
+        applyExtensions(project)
 
-                def dynamicTaskName = "githubStatus${flavour.name}"
+        applyTasks(project)
 
-                project.tasks.find {
-                    def pattern = ~/(?i)merge${flavour.name}.*Assets/
-                    pattern.matcher(it.name).matches()
-                }?.dependsOn project.tasks.create([name: "$dynamicTaskName", type: GithubStatusTask], {
-                    flavor = flavour.name
-                })
-            }
-        }
     }
 
     // check if 'android' plugin is applied to the project
@@ -33,5 +21,13 @@ class GithubStatusPlugin implements Plugin<Project> {
         if (!project.plugins.hasPlugin(AppPlugin) && !project.plugins.hasPlugin(LibraryPlugin)) {
             throw new TaskInstantiationException("'android' or 'android-library' plugin has to be applied before")
         }
+    }
+
+    void applyExtensions(final Project project) {
+        project.extensions.create("githubstatus", GithubStatusExtension)
+    }
+
+    void applyTasks(final Project project) {
+        GithubStatusTask task = project.tasks.create("setG", GithubStatusTask)
     }
 }

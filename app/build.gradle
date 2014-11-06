@@ -14,7 +14,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: GithubStatusPlugin
+apply plugin: 'com.vashisthg.githubstatus'
 
 android {
     compileSdkVersion 21
@@ -46,6 +46,25 @@ dependencies {
 
 
 }
+
+
+githubstatus {
+    token = "c8edd09cc8c4e189b43a2f72f910ff0287cc98d5"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

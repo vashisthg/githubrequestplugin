@@ -4,19 +4,27 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
-import java.io.File
+
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection
 
 class GithubStatusTask extends DefaultTask {
-    @Input
-    String flavor
+
+
+
+    String gitHubToken;
+
 
     @TaskAction
     def exec () {
-        getOutputFile().withWriter { out ->
-            out.writeLine "commit=${getCommit()}"
-            out.writeLine "author=${getAuthor()}"
-            out.writeLine "flavour=${flavor}"
-        }
+        println "running githubstatus task"
+        sendRequest()
+
     }
 
     @Input
@@ -25,12 +33,60 @@ class GithubStatusTask extends DefaultTask {
     }
 
     @Input
-    String getAuthor () {
-        "git log --format=%an -n 1 HEAD".execute([], project.rootDir).text.trim()
+    String getDiff() {
+        "git diff --porcelain".execute([], project.rootDir).text.trim()
     }
 
-    @OutputFile
-    File getOutputFile () {
-        new File ("${project.projectDir}/src/${flavor}/assets/${project.githubstatus.fileName}.${project.githubstatus.fileExtension}")
+    void sendRequest() {
+
+
+
+
+
+        gitHubToken = project.githubstatus.token;
+
+        if (gitHubToken == null || gitHubToken.isEmpty()) {
+            throw new IllegalArgumentException(" API Token is missing")
+        }
+
+
+        String url = "https://api.github.com/repos/vashisthg/pullrequestplugin/statuses/" + getCommit();
+        URL obj = new URL(url);
+
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+        //add reuqest header
+        con.setRequestMethod("POST");
+        con.setRequestProperty("User-Agent", "Mozilla");
+        con.setRequestProperty("Authorization", "token " + gitHubToken);
+        String urlParameters =
+                "{\"state\": \"error\", \"target_url\": \"https://example.com/build/status\", \"description\": \"The build succeeded!\",\"context\": \"continuous-integration/jenkins\"}";
+        // Send post request
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'POST' request to URL : " + url);
+        System.out.println("Post parameters : " + urlParameters);
+        System.out.println("Response Code : " + responseCode);
+        System.out.println("Token: " + gitHubToken)
+
+//        BufferedReader in = new BufferedReader(
+//                new InputStreamReader(con.getInputStream()));
+//        String inputLine;
+//        StringBuffer response = new StringBuffer();
+//
+//        while ((inputLine = in.readLine()) != null) {
+//            response.append(inputLine);
+//        }
+//        in.close();
+//
+//        //print result
+//        System.out.println(response.toString());
     }
+
+
 }
