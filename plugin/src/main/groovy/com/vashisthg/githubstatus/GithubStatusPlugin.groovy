@@ -9,11 +9,8 @@ import com.android.build.gradle.LibraryPlugin
 class GithubStatusPlugin implements Plugin<Project> {
     void apply(Project project) {
         verifyRequiredPlugins project
-
         applyExtensions(project)
-
         applyTasks(project)
-
     }
 
     // check if 'android' plugin is applied to the project
