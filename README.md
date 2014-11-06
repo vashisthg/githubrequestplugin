@@ -1,7 +1,8 @@
-pullrequestplugin
+pullrequestplugin WORK IN PROGRESS
 =================
 
-WORK IN PROGRESS
+After trying many many many times, I am unable to use the jenkins githubpullrequestplugin to set build status to github. Here I am creating gradle tasks to update build status for any commit.
+
 
 
 ===================
