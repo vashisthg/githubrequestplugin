@@ -40,9 +40,6 @@ class GithubStatusTask extends DefaultTask {
     void sendRequest() {
 
 
-
-
-
         gitHubToken = project.githubstatus.token;
 
         if (gitHubToken == null || gitHubToken.isEmpty()) {
@@ -72,10 +69,10 @@ class GithubStatusTask extends DefaultTask {
         System.out.println("\nSending 'POST' request to URL : " + url);
         System.out.println("Post parameters : " + urlParameters);
         System.out.println("Response Code : " + responseCode);
-        System.out.println("Token: " + gitHubToken)
+        System.out.println("Token: " + gitHubToken);
 
-//        BufferedReader in = new BufferedReader(
-//                new InputStreamReader(con.getInputStream()));
+//        InputStreamReader in =
+//                new InputStreamReader(con.getInputStream());
 //        String inputLine;
 //        StringBuffer response = new StringBuffer();
 //
@@ -83,9 +80,27 @@ class GithubStatusTask extends DefaultTask {
 //            response.append(inputLine);
 //        }
 //        in.close();
-//
+////
 //        //print result
 //        System.out.println(response.toString());
+
+        if (responseCode == 200) {
+
+
+            InputStream exportTemplateStream = con.getInputStream();
+            assert exportTemplateStream: "[export.template stream] resource not found"
+            String exportTemplate = exportTemplateStream.text
+            System.out.println(exportTemplate)
+        } else {
+            InputStream exportTemplateStream = con.errorStream
+            assert exportTemplateStream: "[export.template stream] resource not found"
+
+            String exportTemplate = exportTemplateStream.text
+
+
+            throw new IllegalArgumentException(exportTemplate)
+        }
+
     }
 
 
