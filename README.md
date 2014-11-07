@@ -5,6 +5,8 @@ After trying many many many times, I am unable to use the jenkins githubpullrequ
 
 
 
+Big big thanks to @nabil_hachicha for his talk at DroidCon london 2014 https://skillsmatter.com/skillscasts/5984-build-your-gradle-plugin#video
+
 ===================
 Licence Information 
 
