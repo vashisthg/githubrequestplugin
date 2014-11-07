@@ -69,7 +69,7 @@ class GithubUtils {
     }
 
     static String sendRequest(Project project, String state) {
-        System.out.println("in sendRequest");
+        System.out.println("in sendRequest " + state);
 
         String gitHubToken = project.githubstatus.token;
         String owner = project.githubstatus.owner;
@@ -91,7 +91,7 @@ class GithubUtils {
 
         String targetUrl = ""; // TODO
 
-        String urlParameters = GithubUtils.getGithubPostBody(project, stateSuccess, targetUrl)
+        String urlParameters = GithubUtils.getGithubPostBody(project, state, targetUrl)
 
         // Send post request
         con.setDoOutput(true);
