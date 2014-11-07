@@ -25,6 +25,17 @@ class GithubStatusPlugin implements Plugin<Project> {
     }
 
     void applyTasks(final Project project) {
-        GithubStatusTask task = project.tasks.create("setG", GithubStatusTask)
+        GithubStatusTask successTask = project.tasks.create("setGithubStatusSuccess", GithubStatusTask) {
+            status = GithubUtils.stateSuccess
+        }
+        GithubStatusTask failureTask = project.tasks.create("setGithubStatusFailure", GithubStatusTask) {
+            status = GithubUtils.stateFailure
+        }
+        GithubStatusTask pendingTask = project.tasks.create("setGithubStatusPending", GithubStatusTask) {
+            status = GithubUtils.statePending
+        }
+        GithubStatusTask errorTask = project.tasks.create("setGithubStatusError", GithubStatusTask) {
+            status = GithubUtils.stateError
+        }
     }
 }

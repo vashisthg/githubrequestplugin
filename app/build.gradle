@@ -52,5 +52,10 @@ githubstatus {
         token = githubStatusProps['apiToken']
         owner = "vashisthg"
         repository = "pullrequestplugin"
+        successMessage = "Yo! The build Succeeded!"
+        failureMessage = "Yo! The build Failed!"
+        errorMessage = "Yo! The build Errored!"
+        pendingMessage = "Yo! The build is Running!"
+        context = "Continuous Integration"
     }
 }
