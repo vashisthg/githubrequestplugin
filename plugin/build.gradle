@@ -2,15 +2,19 @@ buildscript {
     repositories {
         jcenter()
     }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+    }
 }
 
 
 apply plugin: "groovy"
 apply plugin: "maven"
+apply plugin: 'com.jfrog.bintray'
 
 archivesBaseName = "githubstatus"
 group = 'com.vashisthg'
-version = '0.1.0'
+version = '0.1.01'
 
 repositories {
     mavenCentral ()
@@ -25,10 +29,41 @@ dependencies {
 
 }
 
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+
+artifacts {
+    archives sourcesJar
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository (url: "file:///$buildDir/m2repo")
+            repository (
+                    url: "https://api.bintray.com" + '/maven/' + 'vashisthg' + '/' + 'githubstatus' + '/' + 'githubstatus'
+            ) {
+
+                def bintrayPropsFile = file('bintray.properties')
+
+                if (bintrayPropsFile.exists()) {
+                    def bintrayProps = new Properties()
+                    bintrayProps.load(new FileInputStream(bintrayPropsFile))
+
+                    theusername = bintrayProps['userName']
+                    thepassword = bintrayProps['password']
+                    authentication(
+                            userName: theusername,
+                            password: thepassword
+                    )
+                } else {
+                    println 'please add bintray.properties file'
+                }
+
+            }
         }
     }
 }
